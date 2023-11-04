@@ -8,4 +8,10 @@
     <string name="name_dialog_text">Student Name</string>
     <string name="ID_dialog_text">Student ID</string>
     <string name="GPA_dialog_text">Student GPA</string>
+    <string name="user_profile_text">User Profile</string>
+    <string name="profile_created_text">Profile created: </string>
+    <string name="gpa_text">GPA: </string>
+    <string name="id_text">ID: </string>
+    <string name="name_text">Name: </string>
+    <string name="surname_text">Surname: </string>
 </resources>
