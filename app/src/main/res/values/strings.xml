@@ -2,4 +2,10 @@
     <string name="app_name">coen390_assignment2</string>
     <string name="add_profile_text_action_button">Add Profile</string>
     <string name="toggle_profiles_display_mode_text">By ID</string>
+    <string name="save_text_dialog_fragment">Save</string>
+    <string name="cancel_text_dialog_fragment">Cancel</string>
+    <string name="surname_dialog_text">Student Surname</string>
+    <string name="name_dialog_text">Student Name</string>
+    <string name="ID_dialog_text">Student ID</string>
+    <string name="GPA_dialog_text">Student GPA</string>
 </resources>
