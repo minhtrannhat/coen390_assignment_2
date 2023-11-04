@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">coen390_assignment2</string>
+    <string name="add_profile_text_action_button">Add Profile</string>
+    <string name="toggle_profiles_display_mode_text">By ID</string>
 </resources>
