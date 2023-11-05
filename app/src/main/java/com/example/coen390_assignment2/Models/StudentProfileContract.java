@@ -11,12 +11,12 @@ public final class StudentProfileContract {
 
     /* Inner class that defines the table contents */
     public static class StudentProfileEntry implements BaseColumns {
-        public static final String DATABASE_NAME = "student-profile-db";
+        public static final String DATABASE_NAME = "student_profile_db";
         public static final String TABLE_NAME = "profile";
-        public static final String COLUMN_NAME_PROFILE_ID = "profile-id";
+        public static final String COLUMN_NAME_PROFILE_ID = "profile_id";
         public static final String COLUMN_NAME_SURNAME = "surname";
         public static final String COLUMN_NAME_NAME = "name";
-        public static final String COLUMN_NAME_PROFILE_GPA = "profile-gpa";
-        public static final String COLUMN_NAME_PROFILE_CREATION_DATE = "profile-creation-date";
+        public static final String COLUMN_NAME_PROFILE_GPA = "profile_gpa";
+        public static final String COLUMN_NAME_PROFILE_CREATION_DATE = "profile_creation_date";
     }
 }

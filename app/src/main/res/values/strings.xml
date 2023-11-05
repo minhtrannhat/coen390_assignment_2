@@ -14,4 +14,6 @@
     <string name="id_text">ID: </string>
     <string name="name_text">Name: </string>
     <string name="surname_text">Surname: </string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

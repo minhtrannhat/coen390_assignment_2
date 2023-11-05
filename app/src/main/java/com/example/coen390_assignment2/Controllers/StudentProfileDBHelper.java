@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.coen390_assignment2.Models.StudentProfile;
@@ -43,7 +44,7 @@ public class StudentProfileDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertStudentProfile(StudentProfile studentProfile) {
+    public long insertStudentProfile(StudentProfile studentProfile, Context context) {
         long id = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -65,7 +66,7 @@ public class StudentProfileDBHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public List<StudentProfile> getAllStudentProfile() {
+    public List<StudentProfile> getAllStudentProfile(Context context) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         List<StudentProfile> studentProfiles = new ArrayList<>();
