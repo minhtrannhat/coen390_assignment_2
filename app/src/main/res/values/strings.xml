@@ -16,4 +16,5 @@
     <string name="surname_text">Surname: </string>
     <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="access_history">Access History</string>
 </resources>

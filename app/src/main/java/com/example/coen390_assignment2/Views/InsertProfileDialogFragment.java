@@ -10,11 +10,15 @@ import android.widget.Toast;
 
 import androidx.fragment.app.DialogFragment;
 
+import com.example.coen390_assignment2.Controllers.AccessDBHelper;
 import com.example.coen390_assignment2.Controllers.StudentProfileDBHelper;
+import com.example.coen390_assignment2.Models.Access;
+import com.example.coen390_assignment2.Models.AccessType;
 import com.example.coen390_assignment2.Models.StudentProfile;
 import com.example.coen390_assignment2.R;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class InsertProfileDialogFragment extends DialogFragment {
 
@@ -64,13 +68,18 @@ public class InsertProfileDialogFragment extends DialogFragment {
                                     ID.isEmpty() ||
                                     GPA.isEmpty() ||
                                     ID.length() != 8 ||
-                                    (gpa <= 0.0f || gpa >= 4.3f))) {
+                                    (gpa < 0.0f || gpa > 4.3f))) {
 
                         long id = Long.parseLong(ID);
 
                         StudentProfile profile = new StudentProfile(surname, name, id, gpa, LocalDate.now());
+                        Access access = new Access(id, AccessType.CREATED, LocalDateTime.now());
+
                         StudentProfileDBHelper dbHelper = new StudentProfileDBHelper(getActivity());
+                        AccessDBHelper accessDBHelper = new AccessDBHelper(getActivity());
+
                         dbHelper.insertStudentProfile(profile, getContext());
+                        accessDBHelper.insertAccess(access, getContext());
 
                         ((MainActivity) getActivity()).onStart();
 

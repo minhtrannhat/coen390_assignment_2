@@ -1,12 +1,15 @@
 package com.example.coen390_assignment2.Views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -66,6 +69,27 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setSubtitle(studentProfiles.size() + " Profiles, by " + (profileNameDisplayMode ? "Surname" : "ID") );
 
         studentProfileList.setAdapter(adapter);
+
+        studentProfileList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Get the data associated with the clicked item
+                StudentProfile clickedProfile = studentProfiles.get(position);
+
+                // Create an Intent to start the ProfileActivity
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+
+                // pass extra data
+                intent.putExtra("surname", clickedProfile.getSurname());
+                intent.putExtra("name", clickedProfile.getName());
+                intent.putExtra("profileId", clickedProfile.getProfileID());
+                intent.putExtra("gpa", clickedProfile.getGPA());
+                intent.putExtra("dateCreated", clickedProfile.getProfileCreationDate().toString());
+
+                // Start the ProfileActivity
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -3,28 +3,16 @@ package com.example.coen390_assignment2.Models;
 import java.time.LocalDateTime;
 
 public class Access {
-    private int accessID;
-
     private long profileID;
 
     private AccessType accessType;
 
     private LocalDateTime timestamp;
 
-    public Access(int accessID, long profileID, AccessType accessType, LocalDateTime timestamp) {
-        this.accessID = accessID;
+    public Access(long profileID, AccessType accessType, LocalDateTime timestamp) {
         this.profileID = profileID;
         this.accessType = accessType;
         this.timestamp = timestamp;
-    }
-
-
-    public int getAccessID() {
-        return accessID;
-    }
-
-    public void setAccessID(int accessID) {
-        this.accessID = accessID;
     }
 
     public long getProfileID() {

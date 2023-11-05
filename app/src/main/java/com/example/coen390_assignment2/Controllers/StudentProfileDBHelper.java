@@ -59,7 +59,9 @@ public class StudentProfileDBHelper extends SQLiteOpenHelper {
             // row id
             id = db.insertOrThrow(StudentProfileContract.StudentProfileEntry.TABLE_NAME, null, contentValues);
         } catch (Exception e) {
-            Toast.makeText(context, "DB insert failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Profile ID has to be Unique", Toast.LENGTH_LONG).show();
+
+            Log.e("StudentProfileDBHelper", "insertStudentProfile: " + e);
         } finally {
             db.close();
         }

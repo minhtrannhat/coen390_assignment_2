@@ -46,7 +46,7 @@ public class AccessDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertAccess(Access access) {
+    public long insertAccess(Access access, Context context) {
         long id = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -65,32 +65,34 @@ public class AccessDBHelper extends SQLiteOpenHelper {
         return id;
     }
 
-    public List<Access> getAccessFromProfileID(long profileID) {
+    public List<Access> getAccessFromProfileID(long profileID, Context context) {
         List<Access> accessList = new ArrayList<>();
 
         try (SQLiteDatabase db = this.getReadableDatabase()) {
             Cursor cursor = null;
 
-            String[] columns = {"AccessId", "ProfileID", "AccessType", "Timestamp"};
-            String selection = "ProfileID = ?";
+            String[] columns = {"access_id", "profile_id", "access_type", "timestamp"};
+            String selection = "profile_id = ?";
             String[] selectionArgs = {String.valueOf(profileID)};
-            String orderBy = "Timestamp";
+            String orderBy = "timestamp";
 
             cursor = db.query(AccessContract.AccessEntry.TABLE_NAME, columns, selection, selectionArgs, null, null, orderBy);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
-                        @SuppressLint("Range") int accessId = cursor.getInt(cursor.getColumnIndex(AccessContract.AccessEntry.COLUMN_NAME_ACCESS_ID));
-                        @SuppressLint("Range") int _profileID = cursor.getInt(cursor.getColumnIndex(AccessContract.AccessEntry.COLUMN_NAME_PROFILE_ID));
-                        @SuppressLint("Range") String accessType = cursor.getString(cursor.getColumnIndex("AccessType"));
-                        @SuppressLint("Range") String timestampStr = cursor.getString(cursor.getColumnIndex("Timestamp"));
+//                        int accessID = cursor.getInt(cursor.getColumnIndexOrThrow("access_id"));
+                        int _profileID = cursor.getInt(cursor.getColumnIndexOrThrow("profile_id"));
+                        String accessType = cursor.getString(cursor.getColumnIndexOrThrow("access_type"));
+                        String timestamp = cursor.getString(cursor.getColumnIndexOrThrow("timestamp"));
 
-                        // Parse the timestamp string into a LocalDateTime object
-                        LocalDateTime timestamp = LocalDateTime.parse(timestampStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+                        // Convert the timestamp String to a Java LocalDateTime object
+                        LocalDateTime localDateTime = LocalDateTime.parse(timestamp, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
 
-                        Access access = new Access(accessId, _profileID, AccessType.matchEnum(accessType), timestamp);
+                        // Create an Access object and add it to the list
+                        Access access = new Access(_profileID, AccessType.matchEnum(accessType), localDateTime);
                         accessList.add(access);
+
                     } while (cursor.moveToNext());
                 }
                 cursor.close();
