@@ -48,14 +48,14 @@ public class MainActivity extends AppCompatActivity {
         studentProfileDBHelper = new StudentProfileDBHelper(getApplicationContext());
 
         initAddProfileActionButton(showDialogButton);
+
+        // surname when true, ID when false
+        profileNameDisplayMode = true;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        // surname when true, ID when false
-        profileNameDisplayMode = true;
 
         List<StudentProfile> studentProfiles = studentProfileDBHelper.getAllStudentProfile(getApplicationContext());
 
@@ -86,6 +86,26 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // toggle Display mode
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.toggle_profiles_display_mode && toggle.getTitle() == "By ID") {
+            profileNameDisplayMode = false;
+            onStart();
+
+            return true;
+        } else if (id == R.id.toggle_profiles_display_mode && toggle.getTitle() == "By Surname"){
+            profileNameDisplayMode = true;
+
+            onStart();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
     protected String[] showStudentProfileList(List<StudentProfile> studentProfiles, boolean profileNameDisplayMode){
         // Create a new list for sorted profiles
         List<StudentProfile> sortedProfiles = new ArrayList<>(studentProfiles);
