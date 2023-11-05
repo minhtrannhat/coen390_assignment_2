@@ -1,5 +1,6 @@
 package com.example.coen390_assignment2.Views;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -68,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
+        printStudentProfileList();
+    }
+
+    private void printStudentProfileList(){
         List<StudentProfile> studentProfiles = studentProfileDBHelper.getAllStudentProfile(getApplicationContext());
 
         // by default sort by surname
@@ -128,14 +133,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.toggle_profiles_display_mode && toggle.getTitle() == "By ID") {
             profileNameDisplayMode = false;
-            onStart();
-
+            printStudentProfileList();
             return false;
         } else if (id == R.id.toggle_profiles_display_mode && toggle.getTitle() == "By Surname"){
             profileNameDisplayMode = true;
-
-            onStart();
-
+            printStudentProfileList();
             return false;
         }
 
