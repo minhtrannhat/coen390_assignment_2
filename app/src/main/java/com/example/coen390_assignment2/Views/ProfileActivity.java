@@ -1,25 +1,27 @@
 package com.example.coen390_assignment2.Views;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.example.coen390_assignment2.Controllers.AccessDBHelper;
 import com.example.coen390_assignment2.Models.Access;
+import com.example.coen390_assignment2.Models.AccessType;
 import com.example.coen390_assignment2.R;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -59,6 +61,18 @@ public class ProfileActivity extends AppCompatActivity {
 
         setTitle("Profile Activity");
 
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                Log.d("ProfileActivity", "handleOnBackPressed: Pressed");
+                createAccessClosed(profileId, AccessType.CLOSED, LocalDateTime.now());
+                finish();
+            }
+        };
+
+        // Add the callback to the back button dispatcher
+        getOnBackPressedDispatcher().addCallback(this, callback);
+
         // Retrieve the extra data from the Intent
         Intent intent = getIntent();
 
@@ -74,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
         GPATextView.setText(Float.toString(gpa));
         ProfileCreatedTextView.setText(creationDate);
 
-        if (profileId != -1 || gpa != -1){
+        if (profileId != -1 || gpa != -1) {
             List<Access> accessList = dbHelper.getAccessFromProfileID(profileId, getApplicationContext());
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, accessListFromProfileIDToString(accessList));
@@ -86,12 +100,16 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            createAccessClosed(profileId, AccessType.CLOSED, LocalDateTime.now());
+            return false;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
-    protected String[] accessListFromProfileIDToString(List<Access> accessList){
+    protected String[] accessListFromProfileIDToString(List<Access> accessList) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd @ HH:mm:ss");
 
         List<String> formattedAccessStrings = new ArrayList<>();
@@ -101,18 +119,12 @@ public class ProfileActivity extends AppCompatActivity {
             formattedAccessStrings.add(formattedAccessString);
         }
 
-        // Sort the list of formatted String representations based on the timestamp
-        formattedAccessStrings.sort(new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                // Extract the timestamps from the strings and compare them
-                LocalDateTime timestamp1 = LocalDateTime.parse(s1.split(" ")[0], formatter);
-                LocalDateTime timestamp2 = LocalDateTime.parse(s2.split(" ")[0], formatter);
-                return timestamp1.compareTo(timestamp2);
-            }
-        });
-
         // Convert the sorted formatted String list back to a String array
         return formattedAccessStrings.toArray(new String[0]);
+    }
+
+    protected void createAccessClosed(long profileId, AccessType accessType, LocalDateTime timestamp) {
+        Access access = new Access(profileId, accessType, timestamp);
+        dbHelper.insertAccess(access, getApplicationContext());
     }
 }

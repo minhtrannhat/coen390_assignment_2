@@ -14,18 +14,24 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.coen390_assignment2.Controllers.AccessDBHelper;
 import com.example.coen390_assignment2.Controllers.StudentProfileDBHelper;
+import com.example.coen390_assignment2.Models.Access;
+import com.example.coen390_assignment2.Models.AccessType;
 import com.example.coen390_assignment2.Models.StudentProfile;
 import com.example.coen390_assignment2.Models.StudentProfileIDComparator;
 import com.example.coen390_assignment2.Models.StudentProfileSurnameComparator;
 import com.example.coen390_assignment2.R;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     protected StudentProfileDBHelper studentProfileDBHelper;
+
+    protected AccessDBHelper accessDBHelper;
 
     protected Toolbar toolbar;
     protected Button showDialogButton;
@@ -49,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         studentProfileDBHelper = new StudentProfileDBHelper(getApplicationContext());
+
+        accessDBHelper = new AccessDBHelper(getApplicationContext());
 
         initAddProfileActionButton(showDialogButton);
 
@@ -86,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("gpa", clickedProfile.getGPA());
                 intent.putExtra("dateCreated", clickedProfile.getProfileCreationDate().toString());
 
+                // create an Access entry
+                createAccessOpened(clickedProfile.getProfileID(), AccessType.OPENED, LocalDateTime.now());
+
                 // Start the ProfileActivity
                 startActivity(intent);
             }
@@ -119,13 +130,13 @@ public class MainActivity extends AppCompatActivity {
             profileNameDisplayMode = false;
             onStart();
 
-            return true;
+            return false;
         } else if (id == R.id.toggle_profiles_display_mode && toggle.getTitle() == "By Surname"){
             profileNameDisplayMode = true;
 
             onStart();
 
-            return true;
+            return false;
         }
 
         return super.onOptionsItemSelected(item);
@@ -172,5 +183,10 @@ public class MainActivity extends AppCompatActivity {
                 dialogFragment.show(getSupportFragmentManager(), "dialog_fragment_tag");
             }
         });
+    }
+
+    protected void createAccessOpened(long profileID, AccessType accessType, LocalDateTime timestamp){
+        Access access = new Access(profileID, accessType, timestamp);
+        accessDBHelper.insertAccess(access, getApplicationContext());
     }
 }

@@ -74,14 +74,13 @@ public class AccessDBHelper extends SQLiteOpenHelper {
             String[] columns = {"access_id", "profile_id", "access_type", "timestamp"};
             String selection = "profile_id = ?";
             String[] selectionArgs = {String.valueOf(profileID)};
-            String orderBy = "timestamp";
+            String orderBy = "timestamp DESC"; // sort by Latest Access First
 
             cursor = db.query(AccessContract.AccessEntry.TABLE_NAME, columns, selection, selectionArgs, null, null, orderBy);
 
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
-//                        int accessID = cursor.getInt(cursor.getColumnIndexOrThrow("access_id"));
                         int _profileID = cursor.getInt(cursor.getColumnIndexOrThrow("profile_id"));
                         String accessType = cursor.getString(cursor.getColumnIndexOrThrow("access_type"));
                         String timestamp = cursor.getString(cursor.getColumnIndexOrThrow("timestamp"));
