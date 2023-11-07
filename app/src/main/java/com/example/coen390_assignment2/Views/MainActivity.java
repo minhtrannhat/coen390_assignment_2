@@ -1,6 +1,5 @@
 package com.example.coen390_assignment2.Views;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -72,14 +70,14 @@ public class MainActivity extends AppCompatActivity {
         printStudentProfileList();
     }
 
-    private void printStudentProfileList(){
+    private void printStudentProfileList() {
         List<StudentProfile> studentProfiles = studentProfileDBHelper.getAllStudentProfile(getApplicationContext());
 
         // by default sort by surname
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, showStudentProfileList(studentProfiles, profileNameDisplayMode));
 
         // set tool bar subtitle text
-        toolbar.setSubtitle(studentProfiles.size() + " Profiles, by " + (profileNameDisplayMode ? "Surname" : "ID") );
+        toolbar.setSubtitle(studentProfiles.size() + " Profiles, by " + (profileNameDisplayMode ? "Surname" : "ID"));
 
         studentProfileList.setAdapter(adapter);
 
@@ -118,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         // toggle to the next mode
-        if (profileNameDisplayMode){
+        if (profileNameDisplayMode) {
             toggle.setTitle("By ID");
-        } else{
+        } else {
             toggle.setTitle("By Surname");
         }
         return true;
@@ -135,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             profileNameDisplayMode = false;
             printStudentProfileList();
             return false;
-        } else if (id == R.id.toggle_profiles_display_mode && toggle.getTitle() == "By Surname"){
+        } else if (id == R.id.toggle_profiles_display_mode && toggle.getTitle() == "By Surname") {
             profileNameDisplayMode = true;
             printStudentProfileList();
             return false;
@@ -143,7 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    protected String[] showStudentProfileList(List<StudentProfile> studentProfiles, boolean profileNameDisplayMode){
+
+    protected String[] showStudentProfileList(List<StudentProfile> studentProfiles, boolean profileNameDisplayMode) {
         // Create a new list for sorted profiles
         List<StudentProfile> sortedProfiles = new ArrayList<>(studentProfiles);
 
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         String[] profileListToString = new String[sortedProfiles.size()];
 
         // sort by surname
-        if (profileNameDisplayMode){
+        if (profileNameDisplayMode) {
             // Sort the new list based on the "surname" field
             sortedProfiles.sort(new StudentProfileSurnameComparator());
 
@@ -187,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    protected void createAccessOpened(long profileID, AccessType accessType, LocalDateTime timestamp){
+    protected void createAccessOpened(long profileID, AccessType accessType, LocalDateTime timestamp) {
         Access access = new Access(profileID, accessType, timestamp);
         accessDBHelper.insertAccess(access, getApplicationContext());
     }

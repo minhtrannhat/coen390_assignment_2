@@ -1,6 +1,5 @@
 package com.example.coen390_assignment2.Controllers;
 
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -21,7 +20,6 @@ import java.util.List;
 
 public class AccessDBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private Context context = null;
 
     public AccessDBHelper(@Nullable Context context) {
         super(context, AccessContract.AccessEntry.DATABASE_NAME, null, DATABASE_VERSION);
@@ -46,7 +44,7 @@ public class AccessDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertAccess(Access access, Context context) {
+    public void insertAccess(Access access, Context context) {
         long id = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -62,7 +60,6 @@ public class AccessDBHelper extends SQLiteOpenHelper {
         } finally {
             db.close();
         }
-        return id;
     }
 
     public List<Access> getAccessFromProfileID(long profileID, Context context) {

@@ -24,8 +24,6 @@ public class InsertProfileDialogFragment extends DialogFragment {
 
     private EditText profile_surname_edit_text, profile_name_edit_text, profile_ID_edit_text, profile_GPA_edit_text;
 
-    private Button cancelButton, saveButton;
-
     public InsertProfileDialogFragment() {
         // Required empty public constructor
     }
@@ -41,8 +39,8 @@ public class InsertProfileDialogFragment extends DialogFragment {
         profile_ID_edit_text = view.findViewById(R.id.profile_ID_edit_text);
         profile_GPA_edit_text = view.findViewById(R.id.profile_GPA_edit_text);
 
-        cancelButton = view.findViewById(R.id.cancelButton);
-        saveButton = view.findViewById(R.id.saveButton);
+        Button cancelButton = view.findViewById(R.id.cancelButton);
+        Button saveButton = view.findViewById(R.id.saveButton);
 
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

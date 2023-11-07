@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.coen390_assignment2.Controllers.AccessDBHelper;
+import com.example.coen390_assignment2.Controllers.StudentProfileDBHelper;
 import com.example.coen390_assignment2.Models.Access;
 import com.example.coen390_assignment2.Models.AccessType;
 import com.example.coen390_assignment2.R;
@@ -34,7 +36,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     protected TextView surnameTextView, nameTextView, IDTextView, GPATextView, ProfileCreatedTextView;
 
-    protected AccessDBHelper dbHelper;
+    protected AccessDBHelper accessDBHelper;
+
+    protected StudentProfileDBHelper studentProfileDBHelper;
 
     protected Toolbar toolbar;
 
@@ -46,7 +50,8 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        dbHelper = new AccessDBHelper(getApplicationContext());
+        accessDBHelper = new AccessDBHelper(getApplicationContext());
+        studentProfileDBHelper = new StudentProfileDBHelper(getApplicationContext());
 
         surnameTextView = findViewById(R.id.surnameTextView);
         nameTextView = findViewById(R.id.nameTextView);
@@ -55,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity {
         ProfileCreatedTextView = findViewById(R.id.ProfileCreatedTextView);
         accessListView = findViewById(R.id.accessListView);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -65,7 +70,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 Log.d("ProfileActivity", "handleOnBackPressed: Pressed");
-                createAccessClosed(profileId, AccessType.CLOSED, LocalDateTime.now());
+                createAccessClosed(profileId, LocalDateTime.now());
                 finish();
             }
         };
@@ -82,6 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
         gpa = intent.getFloatExtra("gpa", -1);
         creationDate = intent.getStringExtra("dateCreated");
 
+        // set the text views
         surnameTextView.setText(surname);
         nameTextView.setText(name);
         IDTextView.setText(Long.toString(profileId));
@@ -89,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
         ProfileCreatedTextView.setText(creationDate);
 
         if (profileId != -1 || gpa != -1) {
-            List<Access> accessList = dbHelper.getAccessFromProfileID(profileId, getApplicationContext());
+            List<Access> accessList = accessDBHelper.getAccessFromProfileID(profileId, getApplicationContext());
 
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, accessListFromProfileIDToString(accessList));
 
@@ -99,14 +105,27 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
+    // handle the case when user pressed on the back (up) button in the action/tool bar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            createAccessClosed(profileId, AccessType.CLOSED, LocalDateTime.now());
+            createAccessClosed(profileId, LocalDateTime.now());
             return false;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    // Delete profile and return to Main Activity
+    public void onDeleteProfileButtonClick(View view) {
+        studentProfileDBHelper.deleteProfile(profileId, getApplicationContext());
+        Log.d("ProfileActivity", "onDeleteProfileButtonClick: Deleted profile" + Long.toString(profileId));
+
+        Access access = new Access(profileId, AccessType.DELETED, LocalDateTime.now());
+        accessDBHelper.insertAccess(access, getApplicationContext());
+        Log.d("ProfileActivity", "onDeleteProfileButtonClick: Added access entry DELETE for profile ID: " + Long.toString(profileId));
+
+        finish();
     }
 
     protected String[] accessListFromProfileIDToString(List<Access> accessList) {
@@ -123,8 +142,8 @@ public class ProfileActivity extends AppCompatActivity {
         return formattedAccessStrings.toArray(new String[0]);
     }
 
-    protected void createAccessClosed(long profileId, AccessType accessType, LocalDateTime timestamp) {
-        Access access = new Access(profileId, accessType, timestamp);
-        dbHelper.insertAccess(access, getApplicationContext());
+    protected void createAccessClosed(long profileId, LocalDateTime timestamp) {
+        Access access = new Access(profileId, AccessType.CLOSED, timestamp);
+        accessDBHelper.insertAccess(access, getApplicationContext());
     }
 }

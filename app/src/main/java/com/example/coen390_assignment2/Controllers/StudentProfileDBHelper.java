@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.coen390_assignment2.Models.StudentProfile;
@@ -22,7 +21,6 @@ import java.util.List;
 
 public class StudentProfileDBHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private Context context = null;
 
     public StudentProfileDBHelper(@Nullable Context context) {
         super(context, StudentProfileContract.StudentProfileEntry.DATABASE_NAME, null, DATABASE_VERSION);
@@ -44,7 +42,7 @@ public class StudentProfileDBHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public long insertStudentProfile(StudentProfile studentProfile, Context context) {
+    public void insertStudentProfile(StudentProfile studentProfile, Context context) {
         long id = -1;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -65,7 +63,6 @@ public class StudentProfileDBHelper extends SQLiteOpenHelper {
         } finally {
             db.close();
         }
-        return id;
     }
 
     public List<StudentProfile> getAllStudentProfile(Context context) {
@@ -97,5 +94,22 @@ public class StudentProfileDBHelper extends SQLiteOpenHelper {
             db.close();
         }
         return studentProfiles;
+    }
+
+    public void deleteProfile(long profileID, Context context) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try{
+            // Define the WHERE clause with the ProfileID
+            String whereClause = "profile_id = ?";
+            String[] whereArgs = { String.valueOf(profileID) };
+
+            // Execute the DELETE statement
+            db.delete("Profile", whereClause, whereArgs);
+        } catch (Exception e) {
+            Toast.makeText(context, "Error deleting Student Profile", Toast.LENGTH_SHORT).show();
+        } finally {
+            db.close();
+        }
     }
 }
